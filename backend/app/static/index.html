@@ -24,7 +24,7 @@
                     <li><a id="nav-database">TRZ Registry</a></li>
                     <li><a id="nav-developer" style="display: none;">Developer API</a></li>
                     <li><a id="nav-history" style="display: none;">History</a></li>
-                    <li><a id="nav-pricing">Pricing</a></li>
+                    <li><a id="nav-pricing" class="nav-pricing-premium">Pricing <span class="premium-badge">PRO</span></a></li>
                     <li><a id="nav-extension">Extension</a></li>
                     <li><a id="nav-admin" style="display: none; color: var(--color-dangerous-text); font-weight: 600;">Admin Panel</a></li>
                 </ul>
@@ -362,6 +362,25 @@ curl -X POST "https://api.tracez.app/api/scan/file" \
   -F "file=@app.apk"
                         </pre>
                     </div>
+
+                    <!-- Usage Metrics -->
+                    <div style="margin-top: 1rem;">
+                        <h3 style="font-size: 0.9rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 0.5rem;">API Usage (Last 30 Days)</h3>
+                        <div style="background: var(--bg-base); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: flex-end; gap: 0.5rem; height: 120px;">
+                            <div style="flex: 1; background: var(--color-primary); height: 20%; border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+                            <div style="flex: 1; background: var(--color-primary); height: 35%; border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+                            <div style="flex: 1; background: var(--color-primary); height: 15%; border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+                            <div style="flex: 1; background: var(--color-primary); height: 60%; border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+                            <div style="flex: 1; background: var(--color-primary); height: 45%; border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+                            <div style="flex: 1; background: var(--color-primary); height: 80%; border-radius: 4px 4px 0 0; opacity: 0.9;"></div>
+                            <div style="flex: 1; background: var(--color-primary); height: 95%; border-radius: 4px 4px 0 0;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                            <span>May 1</span>
+                            <span>May 15</span>
+                            <span>Today (1,204 req)</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -513,6 +532,13 @@ curl -X POST "https://api.tracez.app/api/scan/file" \
 
             <!-- VIEW 8: ADMIN SYSTEM PANEL -->
             <section id="view-admin" class="spa-view" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--color-text-main); margin: 0;">SecOps Admin Portal</h2>
+                    <button class="action-btn" id="btn-admin-controls-trigger" style="background: var(--bg-card); color: var(--color-text-main); border: 1px solid var(--border-color); font-size: 0.8rem; font-weight: 600; padding: 0.5rem 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: inline-flex; align-items: center; gap: 0.45rem;">
+                        ⚙️ Admin Controls
+                    </button>
+                </div>
+
                 <div class="admin-metrics-grid">
                     <div class="card-minimal admin-metric-card">
                         <div class="metric-num" id="admin-metric-users">0</div>
@@ -532,10 +558,30 @@ curl -X POST "https://api.tracez.app/api/scan/file" \
                     </div>
                 </div>
 
-                <div class="scan-grid-minimal">
-                    <!-- Advanced Scan Manager -->
+                <!-- Threat Intelligence Widgets (Replaces the generic global map) -->
+                <div class="admin-sec-intel-grid" style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <!-- Live Threat Activity Feed -->
+                    <div class="card-minimal" style="padding: 1.25rem; margin-bottom: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                            <h3 style="font-weight: 600; font-size: 0.9rem; color: var(--color-text-main); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                📡 Recent Threat Activity Feed
+                            </h3>
+                            <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; color: var(--color-safe-text); font-weight: 600; background: var(--color-safe-bg); padding: 0.15rem 0.4rem; border-radius: 4px;">
+                                <span style="width: 5px; height: 5px; background: var(--color-safe-text); border-radius: 50%; display: inline-block;"></span>
+                                Live Stream
+                            </span>
+                        </div>
+                        
+                        <div id="admin-threat-activity-feed" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 240px; overflow-y: auto; padding-right: 0.25rem;">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;" class="admin-middle-row">
+                    <!-- Global Scan Management Log -->
                     <div>
-                        <h3 style="font-weight: 600; font-size: 0.95rem; color: var(--color-text-main); margin-bottom: 0.75rem;">Global Scan Management Log</h3>
+                        <h3 style="font-weight: 600; font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 0.75rem;">Global Scan Management Log</h3>
                         <div class="table-responsive table-minimal-wrapper">
                             <table class="table-minimal">
                                 <thead>
@@ -547,7 +593,6 @@ curl -X POST "https://api.tracez.app/api/scan/file" \
                                         <th>Date</th>
                                     </tr>
                                 </thead>
-                                id="admin-scan-history-tbody"
                                 <tbody id="admin-scan-history-tbody">
                                     <!-- Populated dynamically -->
                                 </tbody>
@@ -555,35 +600,34 @@ curl -X POST "https://api.tracez.app/api/scan/file" \
                         </div>
                     </div>
 
-                    <!-- Host administrative controls -->
-                    <div class="card-minimal" style="display: flex; flex-direction: column; gap: 1.25rem;">
-                        <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--color-text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Admin Commands</h3>
-                        
+                    <!-- Right Column: Top Blocked Domains & Severity Distribution -->
+                    <div class="card-minimal" style="padding: 1.25rem; margin-bottom: 0; display: flex; flex-direction: column; gap: 1.25rem;">
                         <div>
-                            <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-main);">Database Scan History Wiping</h4>
-                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">Delete all records in the scan log history table permanently.</p>
-                            <button class="action-btn" id="admin-btn-wipe-history" style="background: var(--color-dangerous-text); border-color: var(--color-dangerous-text);">Wipe History DB</button>
+                            <h3 style="font-weight: 600; font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Top Threat Offenders</h3>
+                            <div style="display: flex; flex-direction: column; gap: 0.65rem;" id="admin-top-offenders-list">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
-                        
-                        <hr style="border: none; border-top: 1px solid var(--border-color);">
-                        
+
                         <div>
-                            <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 0.5rem;">Inject Custom Threat Fingerprint</h4>
-                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                                <input type="text" class="minimal-input" id="admin-threat-id" placeholder="Threat ID (e.g. xloader-v4)">
-                                <input type="text" class="minimal-input" id="admin-threat-name" placeholder="Threat Name (e.g. XLoader v4 RAT)">
-                                <select class="minimal-input" id="admin-threat-category">
-                                    <option value="LIB">Malicious SDK (LIB)</option>
-                                    <option value="APK">APK Signature (APK)</option>
-                                    <option value="URL">Phishing link (URL)</option>
-                                </select>
-                                <select class="minimal-input" id="admin-threat-severity">
-                                    <option value="DANGEROUS">DANGEROUS</option>
-                                    <option value="SUSPICIOUS">SUSPICIOUS</option>
-                                </select>
-                                <textarea class="minimal-input" id="admin-threat-desc" placeholder="Verdict description..." style="height: 60px; font-family: inherit; font-size: 0.8rem;"></textarea>
-                                <input type="text" class="minimal-input" id="admin-threat-features" placeholder="Features (comma-separated: e.g. permission:READ_SMS, api:sendTextMessage)">
-                                <button class="scan-btn" id="admin-btn-add-threat">Register Signature</button>
+                            <h3 style="font-weight: 600; font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Threat Distribution</h3>
+                            <div style="display: flex; flex-direction: column; gap: 0.65rem;" id="admin-threat-distribution">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; align-items: center;">
+                                    <span style="color: var(--color-text-muted);">Phishing URL Clones</span>
+                                    <span style="font-weight: 600; color: var(--color-text-main);">42%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; align-items: center;">
+                                    <span style="color: var(--color-text-muted);">Trojan constraint evasion</span>
+                                    <span style="font-weight: 600; color: var(--color-text-main);">28%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; align-items: center;">
+                                    <span style="color: var(--color-text-muted);">Spyware Signature SDKs</span>
+                                    <span style="font-weight: 600; color: var(--color-text-main);">18%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; align-items: center;">
+                                    <span style="color: var(--color-text-muted);">Adware Packages</span>
+                                    <span style="font-weight: 600; color: var(--color-text-main);">12%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -617,6 +661,85 @@ curl -X POST "https://api.tracez.app/api/scan/file" \
             <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
                 <button class="auth-btn-secondary" id="settings-btn-cancel">Cancel</button>
                 <button class="scan-btn" id="settings-btn-save">Save Keys</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SECURE ADMIN CONTROLS -->
+    <div class="overlay-minimal" id="modal-admin-controls">
+        <div class="modal-minimal-box" style="max-width: 520px; width: 95%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+                <h3 style="font-weight: 600; font-size: 1.05rem; color: var(--color-text-main); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    🛡️ SecOps Admin Controls
+                </h3>
+                <button class="close-btn" id="admin-controls-btn-close">✕</button>
+            </div>
+
+            <!-- Danger Alert Warning Box -->
+            <div style="background: rgba(220, 38, 38, 0.03); border: 1px solid rgba(220, 38, 38, 0.15); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; gap: 0.75rem; align-items: flex-start; text-align: left;">
+                <span style="font-size: 1rem; line-height: 1;">⚠️</span>
+                <div style="font-size: 0.75rem; color: var(--color-dangerous-text); line-height: 1.4;">
+                    <strong>Privileged Operations:</strong> You are accessing dangerous administrator command vectors. Any modifications or database wipes will be tracked by system security monitors.
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem; text-align: left;">
+                <!-- Group 1: General & Export -->
+                <div>
+                    <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 0.5rem;">Data Export & Sync</h4>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="action-btn" id="btn-export-csv" style="flex: 1; font-size: 0.75rem; background: var(--bg-card); color: var(--color-text-main); border: 1px solid var(--border-color);">Export Logs (CSV)</button>
+                        <button class="action-btn" id="btn-admin-force-sync" style="flex: 1; font-size: 0.75rem; background: var(--bg-card); color: var(--color-text-main); border: 1px solid var(--border-color);">Force Threat Sync</button>
+                    </div>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--border-color);">
+
+                <!-- Group 2: Policy Manager (Manual Blocklist) -->
+                <div>
+                    <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 0.4rem;">Domain Policy Blocklist</h4>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" class="minimal-input" id="admin-blocklist-domain" placeholder="example-phish.com" style="font-size: 0.8rem;">
+                        <button class="action-btn" id="btn-admin-add-block" style="background: var(--color-dangerous-text); border-color: var(--color-dangerous-text); font-size: 0.8rem;">Block Domain</button>
+                    </div>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--border-color);">
+
+                <!-- Group 3: Threat Feed & Custom Signatures -->
+                <div>
+                    <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 0.5rem;">Custom Threat Signatures</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="minimal-input" id="admin-threat-id" placeholder="Threat ID (e.g. xloader-v4)" style="font-size: 0.8rem;">
+                            <input type="text" class="minimal-input" id="admin-threat-name" placeholder="Threat Name" style="font-size: 0.8rem;">
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select class="minimal-input" id="admin-threat-category" style="font-size: 0.8rem;">
+                                <option value="LIB">Malicious SDK (LIB)</option>
+                                <option value="APK">APK Signature (APK)</option>
+                                <option value="URL">Phishing link (URL)</option>
+                            </select>
+                            <select class="minimal-input" id="admin-threat-severity" style="font-size: 0.8rem;">
+                                <option value="DANGEROUS">DANGEROUS</option>
+                                <option value="SUSPICIOUS">SUSPICIOUS</option>
+                                <option value="CRITICAL">CRITICAL</option>
+                            </select>
+                        </div>
+                        <textarea class="minimal-input" id="admin-threat-desc" placeholder="Verdict description..." style="height: 50px; font-family: inherit; font-size: 0.8rem;"></textarea>
+                        <input type="text" class="minimal-input" id="admin-threat-features" placeholder="Features (comma-separated: e.g. permission:READ_SMS, api:sendTextMessage)" style="font-size: 0.8rem;">
+                        <button class="scan-btn" id="admin-btn-add-threat" style="font-size: 0.8rem; padding: 0.5rem;">Register Signature</button>
+                    </div>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--border-color);">
+
+                <!-- Group 4: Destruction (Wipe DB) -->
+                <div>
+                    <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 0.25rem;">Destructive Commands</h4>
+                    <p style="font-size: 0.7rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">Wipe the SQLite history table. This operation cannot be undone.</p>
+                    <button class="action-btn" id="admin-btn-wipe-history" style="background: rgba(220, 38, 38, 0.08); color: var(--color-dangerous-text); border: 1px solid rgba(220, 38, 38, 0.2); font-size: 0.75rem; width: 100%;">Wipe Scan History Database</button>
+                </div>
             </div>
         </div>
     </div>

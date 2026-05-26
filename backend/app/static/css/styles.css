@@ -663,3 +663,60 @@ footer {
         max-width: 100%;
     }
 }
+
+/* Pricing Navigation Premium Highlight */
+.nav-pricing-premium {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    color: #4f46e5 !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease;
+}
+
+.nav-pricing-premium:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 1px 3px rgba(99, 102, 241, 0.1);
+}
+
+.premium-badge {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    padding: 0.05rem 0.25rem;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    color: #ffffff;
+    border-radius: 4px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+/* Critical Severity styles */
+.badge-verdict.critical { color: #7F1D1D; background: #FEE2E2; border: 1px solid rgba(239, 68, 68, 0.2); }
+.status-critical { color: #7F1D1D; background: #FEE2E2; }
+
+/* Threat Activity Feed styling & animations */
+#admin-threat-activity-feed::-webkit-scrollbar {
+    width: 4px;
+}
+#admin-threat-activity-feed::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+}
+#admin-threat-activity-feed::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Responsiveness for admin middle row layout */
+@media(max-width: 800px) {
+    .admin-middle-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+

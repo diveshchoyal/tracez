@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Context-aware view loaders
         if (viewName === "admin") {
-            setTimeout(initThreatMap, 100);
+            setTimeout(populateAdminIntelWidgets, 100);
         }
         if (viewName === "database") {
             loadThreatDatabase();
@@ -1076,36 +1076,93 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Map initialization
-    let threatMap = null;
-    function initThreatMap() {
-        if (!threatMap && document.getElementById("threat-map")) {
-            threatMap = L.map('threat-map').setView([20.0, 0.0], 2);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(threatMap);
-
-            // Add mock threats
-            const mockThreats = [
-                { lat: 55.7558, lng: 37.6173, info: "Malicious IP (RU)" },
-                { lat: 39.9042, lng: 116.4074, info: "C2 Server (CN)" },
-                { lat: 40.7128, lng: -74.0060, info: "Phishing Host (US)" }
+    // Replaces Map with Security Intelligence widgets
+    function populateAdminIntelWidgets() {
+        // Populating Recent Threat Activity Feed
+        const feed = document.getElementById("admin-threat-activity-feed");
+        if (feed) {
+            const feedData = [
+                { time: "2 mins ago", type: "CRITICAL", msg: "Typosquat host 'fitgirl-repacks.site.co' spoofing brand clone" },
+                { time: "12 mins ago", type: "WARNING", msg: "Suspicious API calls detected: read SMS permissions requested by APK scan" },
+                { time: "25 mins ago", type: "DANGEROUS", msg: "DEX decompilation match: Spyware namespace signature 'com.trojan.spynote'" },
+                { time: "45 mins ago", type: "SAFE", msg: "Clean URL scan: 'google.com' - 0 risk metrics found" },
+                { time: "1 hour ago", type: "CRITICAL", msg: "VirusTotal threat engine match: 15 malicious engine flags on binary upload" },
+                { time: "2 hours ago", type: "WARNING", msg: "Newly registered domain: 'secure-billing-chase.xyz' age is < 2 days" }
             ];
+            
+            feed.innerHTML = feedData.map(item => {
+                let badgeClass = "status-done";
+                if (item.type === "CRITICAL") badgeClass = "status-critical";
+                else if (item.type === "DANGEROUS") badgeClass = "status-danger";
+                else if (item.type === "WARNING") badgeClass = "status-warning";
+                
+                return `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; font-size:0.8rem; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">
+                        <div style="display:flex; flex-direction:column; gap:0.15rem; text-align:left;">
+                            <span style="font-weight:600; color:var(--color-text-main);">${item.msg}</span>
+                            <span style="font-size:0.7rem; color:var(--color-text-muted);">${item.time}</span>
+                        </div>
+                        <span class="layer-status-badge ${badgeClass}" style="font-size:0.65rem; padding:0.1rem 0.35rem; border-radius:3px;">${item.type}</span>
+                    </div>
+                `;
+            }).join("");
+        }
 
-            mockThreats.forEach(t => {
-                L.circleMarker([t.lat, t.lng], {
-                    color: 'var(--color-dangerous-text)',
-                    radius: 8,
-                    weight: 2,
-                    fillOpacity: 0.6
-                }).bindPopup(t.info).addTo(threatMap);
-            });
+        // Populating Top Blocked Domains
+        const offenders = document.getElementById("admin-top-offenders-list");
+        if (offenders) {
+            const offenderData = [
+                { domain: "fitgirl-repacks.site.co", category: "Typosquat", count: 86, color: "var(--color-dangerous-text)" },
+                { domain: "chase-update-account.online", category: "Phishing", count: 54, color: "var(--color-dangerous-text)" },
+                { domain: "185.220.101.45", category: "C2 Server", count: 31, color: "var(--color-suspicious-text)" },
+                { domain: "spynote-builder.ru", category: "Spyware Source", count: 18, color: "var(--color-suspicious-text)" }
+            ];
+            
+            offenders.innerHTML = offenderData.map(o => `
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem;">
+                    <div style="display:flex; flex-direction:column; gap:0.1rem; text-align:left;">
+                        <span style="font-weight:600; color:var(--color-text-main);">${o.domain}</span>
+                        <span style="font-size:0.7rem; color:var(--color-text-muted);">${o.category}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="font-size:0.75rem; font-weight:600; color:${o.color};">${o.count} blocks</span>
+                    </div>
+                </div>
+            `).join("");
         }
-        if (threatMap) {
-            setTimeout(() => threatMap.invalidateSize(), 200);
-        }
+    }
+
+    // Modal secure triggers
+    const btnAdminControlsTrigger = document.getElementById("btn-admin-controls-trigger");
+    const modalAdminControls = document.getElementById("modal-admin-controls");
+    const btnAdminControlsClose = document.getElementById("admin-controls-btn-close");
+
+    if (btnAdminControlsTrigger && modalAdminControls) {
+        btnAdminControlsTrigger.addEventListener("click", () => {
+            modalAdminControls.classList.add("active");
+        });
+    }
+
+    if (btnAdminControlsClose && modalAdminControls) {
+        btnAdminControlsClose.addEventListener("click", () => {
+            modalAdminControls.classList.remove("active");
+        });
+    }
+
+    if (modalAdminControls) {
+        modalAdminControls.addEventListener("click", (e) => {
+            if (e.target === modalAdminControls) {
+                modalAdminControls.classList.remove("active");
+            }
+        });
+    }
+
+    // Force sync threat data mock
+    const btnForceSync = document.getElementById("btn-admin-force-sync");
+    if (btnForceSync) {
+        btnForceSync.addEventListener("click", () => {
+            alert("Threat Signature DB Sync forced successfully. Cleaned cache for 4 active definitions.");
+        });
     }
 
     if (document.getElementById("btn-export-csv")) {

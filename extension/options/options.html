@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceZ — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-page">
+    <header class="header">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+          <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z" fill="#6366F1"/>
+          <polyline points="8,12 11,15 16,9" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1>TraceZ Settings</h1>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- API Configuration -->
+      <section class="card">
+        <h2 class="card-title">Backend API</h2>
+        <div class="form-group">
+          <label for="apiUrl">API Server URL</label>
+          <input type="url" id="apiUrl" placeholder="http://localhost:8000" value="http://localhost:8000">
+          <p class="help-text">The TraceZ backend server for threat intelligence enrichment.</p>
+        </div>
+      </section>
+
+      <!-- Protection Level -->
+      <section class="card">
+        <h2 class="card-title">Protection Level</h2>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="level" value="conservative">
+            <div class="radio-content">
+              <span class="radio-label">Conservative</span>
+              <span class="radio-desc">Fewer warnings. Only blocks high-confidence threats.</span>
+            </div>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="level" value="balanced" checked>
+            <div class="radio-content">
+              <span class="radio-label">Balanced</span>
+              <span class="radio-desc">Recommended. Good balance of safety and convenience.</span>
+            </div>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="level" value="aggressive">
+            <div class="radio-content">
+              <span class="radio-label">Aggressive</span>
+              <span class="radio-desc">Maximum protection. May produce more false positives.</span>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section class="card">
+        <h2 class="card-title">Notifications</h2>
+        <div class="toggle-row">
+          <div>
+            <span class="toggle-label">Show notifications</span>
+            <span class="toggle-desc">Alert when threats are detected.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notificationsToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Blocklist -->
+      <section class="card">
+        <h2 class="card-title">Blocklist</h2>
+        <div class="info-row">
+          <span class="info-label">Last synced</span>
+          <span class="info-value" id="lastSynced">Never</span>
+        </div>
+        <button class="btn-secondary" id="syncBtn">Force Sync Now</button>
+        <div class="sync-status" id="syncStatus"></div>
+      </section>
+
+      <!-- Trusted Sites -->
+      <section class="card">
+        <h2 class="card-title">Trusted Sites</h2>
+        <p class="help-text">Sites you've marked as trusted will bypass security checks.</p>
+        <div class="trusted-list" id="trustedList">
+          <div class="empty-state">No trusted sites yet</div>
+        </div>
+        <div class="add-trusted">
+          <input type="text" id="trustedInput" placeholder="example.com">
+          <button class="btn-add" id="addTrustedBtn">Add</button>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="card">
+        <h2 class="card-title">About</h2>
+        <div class="info-row"><span class="info-label">Version</span><span class="info-value">1.0.0</span></div>
+        <div class="info-row"><span class="info-label">Engine</span><span class="info-value">Heuristic + API</span></div>
+        <div class="info-row"><span class="info-label">Privacy</span><span class="info-value">URLs analyzed locally first</span></div>
+      </section>
+
+      <!-- Save -->
+      <button class="btn-primary" id="saveBtn">Save Settings</button>
+      <div class="save-status" id="saveStatus"></div>
+    </main>
+  </div>
+  <script src="options.js" type="module"></script>
+</body>
+</html>

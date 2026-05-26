@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceZ — Page Blocked</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+      background: #FAFAFA; color: #1A1A2E; padding: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 480px; width: 100%; text-align: center;
+      background: #FFFFFF; border-radius: 16px; padding: 40px 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+    }
+    .shield-icon {
+      width: 72px; height: 72px; margin: 0 auto 20px;
+      background: #FEF2F2; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .shield-icon svg { width: 36px; height: 36px; }
+    h1 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #1A1A2E; }
+    .subtitle { font-size: 14px; color: #6B7280; margin-bottom: 24px; line-height: 1.5; }
+    .score-circle {
+      width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 800; color: #991B1B;
+      background: conic-gradient(#EF4444 calc(var(--score) * 3.6deg), #FEF2F2 0deg);
+      position: relative;
+    }
+    .score-circle::before {
+      content: ''; position: absolute; inset: 5px; border-radius: 50%; background: white;
+    }
+    .score-circle span { position: relative; z-index: 1; }
+    .domain-blocked {
+      display: inline-block; padding: 4px 12px; border-radius: 6px;
+      background: #FEF2F2; color: #991B1B; font-size: 13px; font-weight: 500;
+      margin-bottom: 16px; word-break: break-all; max-width: 100%;
+    }
+    .reasons {
+      text-align: left; background: #F9FAFB; border-radius: 8px; padding: 12px 16px;
+      margin-bottom: 24px; border: 1px solid #F3F4F6;
+    }
+    .reasons-title { font-size: 11px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .reason-item {
+      display: flex; align-items: flex-start; gap: 6px; padding: 3px 0;
+      font-size: 13px; color: #4B5563; line-height: 1.4;
+    }
+    .reason-item::before { content: '•'; color: #EF4444; font-weight: bold; }
+    .actions { display: flex; flex-direction: column; gap: 10px; }
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 12px 24px; background: #1A1A2E; color: white; border: none;
+      border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #2D2D4E; }
+    .btn-proceed {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: #9CA3AF; text-decoration: underline;
+      padding: 4px;
+    }
+    .btn-proceed:hover { color: #6B7280; }
+    .footer-note { margin-top: 24px; font-size: 11px; color: #D1D5DB; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="shield-icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z" fill="#EF4444" opacity="0.2"/>
+        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z" stroke="#EF4444" stroke-width="1.5" fill="none"/>
+        <line x1="9" y1="9" x2="15" y2="15" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+        <line x1="15" y1="9" x2="9" y2="15" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <h1>Page Blocked by TraceZ</h1>
+    <p class="subtitle">This page has been flagged as potentially dangerous. We recommend you do not proceed.</p>
+
+    <div class="score-circle" id="scoreCircle" style="--score: 0">
+      <span id="scoreDisplay">—</span>
+    </div>
+
+    <div class="domain-blocked" id="blockedDomain">Unknown domain</div>
+
+    <div class="reasons">
+      <div class="reasons-title">Why was this blocked?</div>
+      <div id="reasonsList">
+        <div class="reason-item">Analysis pending</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="goBackBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Go Back to Safety
+      </button>
+      <button class="btn-proceed" id="proceedBtn">Proceed anyway (not recommended)</button>
+    </div>
+
+    <p class="footer-note">Protected by TraceZ — Safe Browsing Shield</p>
+  </div>
+
+  <script>
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    const blockedUrl = params.get('url') || '';
+    const score = parseInt(params.get('score') || '0', 10);
+    const domain = params.get('domain') || 'Unknown';
+    const reason = params.get('reason') || '';
+
+    // Render
+    document.getElementById('blockedDomain').textContent = domain;
+    document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('scoreCircle').style.setProperty('--score', score);
+
+    // Reasons
+    const reasonsList = document.getElementById('reasonsList');
+    reasonsList.textContent = '';
+    if (reason) {
+      const parts = reason.split(/[.,;]/).filter(p => p.trim());
+      for (const part of parts) {
+        const item = document.createElement('div');
+        item.className = 'reason-item';
+        item.textContent = part.trim();
+        reasonsList.appendChild(item);
+      }
+    } else {
+      const item = document.createElement('div');
+      item.className = 'reason-item';
+      item.textContent = 'This domain was flagged by multiple security checks';
+      reasonsList.appendChild(item);
+    }
+
+    // Buttons
+    document.getElementById('goBackBtn').addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.go(-2);
+      } else {
+        window.close();
+      }
+    });
+
+    document.getElementById('proceedBtn').addEventListener('click', () => {
+      if (blockedUrl) {
+        // Trust and navigate
+        if (typeof chrome !== 'undefined' && chrome.runtime) {
+          chrome.runtime.sendMessage({ type: 'trustSite', domain: domain });
+        }
+        window.location.href = blockedUrl;
+      }
+    });
+  </script>
+</body>
+</html>

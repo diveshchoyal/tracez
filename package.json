@@ -1,0 +1,19 @@
+{
+  "name": "tracez-browser-shield",
+  "version": "1.0.0",
+  "description": "TraceZ — Intelligent Browser Security Shield (Chrome Manifest V3 + FastAPI Backend)",
+  "main": "run.py",
+  "scripts": {
+    "build:extension": "python scripts/build_extension.py",
+    "start": "python run.py",
+    "test": "python backend/tests/test_backend.py"
+  },
+  "keywords": [
+    "security",
+    "chrome-extension",
+    "phishing-protection",
+    "fastapi"
+  ],
+  "author": "TraceZ Security",
+  "license": "MIT"
+}

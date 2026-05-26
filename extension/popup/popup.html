@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=320">
+  <title>TraceZ</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z" fill="#6366F1"/>
+          <polyline points="8,12 11,15 16,9" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-name">TraceZ</span>
+      </div>
+      <button id="settingsBtn" class="icon-btn" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Score Section -->
+    <section class="score-section">
+      <div class="score-ring" id="scoreRing">
+        <div class="score-value" id="scoreValue">—</div>
+        <div class="score-label" id="scoreLabel">Scanning...</div>
+      </div>
+      <div class="domain-info">
+        <span class="domain-name" id="domainName">Loading...</span>
+        <span class="scan-time" id="scanTime"></span>
+      </div>
+    </section>
+
+    <!-- Scan Details -->
+    <section class="details-section">
+      <button class="accordion-toggle" id="detailsToggle">
+        <span>Scan Details</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <div class="accordion-content" id="detailsContent">
+        <div class="signal-list" id="signalList">
+          <div class="signal-item safe">
+            <span class="signal-icon">✓</span>
+            <span class="signal-text">Waiting for scan results...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Scans -->
+    <section class="recent-section">
+      <h3 class="section-title">Recent Scans</h3>
+      <div class="recent-list" id="recentList">
+        <div class="empty-state">No scans yet</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="protection-toggle">
+        <span class="toggle-label">Protection</span>
+        <label class="switch">
+          <input type="checkbox" id="protectionToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <span class="version">v1.0.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
